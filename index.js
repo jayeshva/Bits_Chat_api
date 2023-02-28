@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
+const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const User = require('./models/User');
 const Message = require('./models/Message');
@@ -28,10 +29,10 @@ const app = express();
 app.use('/uploads', express.static(__dirname + '/uploads'));
 app.use(express.json());
 app.use(cookieParser());
-app.use((req, res, next) => {
-  res.setHeader('Content-Security-Policy', "default-src 'self'");
-  next();
-});
+app.use(cors({
+  credentials: true,
+  origin: process.env.CLIENT_URL,
+}));
 
 async function getUserDataFromRequest(req) {
   return new Promise((resolve, reject) => {
